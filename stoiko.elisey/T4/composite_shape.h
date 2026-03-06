@@ -9,7 +9,7 @@
 
 class CompositeShape : public Shape {
 private:
-    std::vector<std::shared_ptr<Shape>> shapes;
+    std::vector<std::unique_ptr<Shape>> shapes;
 public:
     void addShape(std::unique_ptr<Shape> shape);
     double getArea() const override;
