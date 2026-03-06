@@ -1,4 +1,5 @@
 #include "rectangular_trapezoid.h"
+#include <utility>
 
 RectangularTrapezoid::RectangularTrapezoid(const Point& bl, double bb, double tb, double h)
     : bottomLeft(bl)
@@ -36,4 +37,12 @@ void RectangularTrapezoid::scale(double factor) {
 
 std::string RectangularTrapezoid::getName() const {
     return "RECTANGULAR_TRAPEZOID";
+}
+
+std::pair<Point, Point> RectangularTrapezoid::getBounds() const {
+    double maxBase = std::max(bottomBase, topBase);
+    return std::make_pair(
+        bottomLeft,
+        Point(bottomLeft.x + maxBase, bottomLeft.y + height)
+    );
 }

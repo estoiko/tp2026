@@ -27,3 +27,10 @@ void Ellipse::scale(double factor)  {
 std::string Ellipse::getName() const {
     return "ELLIPSE";
 }
+
+std::pair<Point, Point> Ellipse::getBounds() const {
+    return {
+        Point(center.x - r1, center.y - r2),
+        Point(center.x + r1, center.y + r2)
+    };
+}

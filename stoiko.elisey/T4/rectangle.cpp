@@ -35,3 +35,7 @@ void Rectangle::scale(double factor) {
 std::string Rectangle::getName() const {
     return "RECTANGLE";
 }
+
+std::pair<Point, Point> Rectangle::getBounds() const {
+    return { bottomLeft, topRight };
+}
