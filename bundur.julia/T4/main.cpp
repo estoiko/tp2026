@@ -37,7 +37,7 @@ int main() {
             printShapeInfo(shapes[i]);
             std::cout<<"\n";
         }
-    } 
+    }
     catch (const std::exception& e) {
         std::cerr<<"Error: "<<e.what()<<"\n";
         return 1;

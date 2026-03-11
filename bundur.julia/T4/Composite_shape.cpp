@@ -1,8 +1,8 @@
 #include "Composite_shape.h"
 #include <iostream>
 #include <algorithm>
-void CompositeShape::addShape(std::shared_ptr<Shape> shape) { 
-    shapes_.push_back(shape); 
+void CompositeShape::addShape(std::shared_ptr<Shape> shape) {
+    shapes_.push_back(shape);
 }
 double CompositeShape::getArea() const {
     double total = 0;
@@ -15,7 +15,7 @@ Point CompositeShape::getCenter() const {
     }
     double minX = shapes_[0]->getCenter().x;
     double maxX = minX;
-    double minY = shapes_[0]->getCenter().y; 
+    double minY = shapes_[0]->getCenter().y;
     double maxY = minY;
     for (const auto& s : shapes_) {
         Point c = s->getCenter();
@@ -47,9 +47,9 @@ void CompositeShape::scale(double factor) {
         s->scale(factor);
     }
 }
-std::string CompositeShape::getName() const { 
-    return "COMPOSITE"; 
+std::string CompositeShape::getName() const {
+    return "COMPOSITE";
 }
-const std::vector<std::shared_ptr<Shape>>& CompositeShape::getShapes() const { 
-    return shapes_; 
+const std::vector<std::shared_ptr<Shape>>& CompositeShape::getShapes() const {
+    return shapes_;
 }
