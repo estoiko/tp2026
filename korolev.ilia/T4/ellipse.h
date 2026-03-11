@@ -3,7 +3,8 @@
 
 #include "shape.h"
 
-class Ellipse : public Shape {
+class Ellipse : public Shape
+{
 public:
     Ellipse(double centerX, double centerY, double radiusX, double radiusY);
     double getArea() const override;

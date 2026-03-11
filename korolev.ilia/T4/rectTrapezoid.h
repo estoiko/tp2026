@@ -3,7 +3,8 @@
 
 #include "shape.h"
 
-class RectTrapezoid : public Shape {
+class RectTrapezoid : public Shape
+{
 public:
     RectTrapezoid(double x, double y, double bottomBase, double topBase,
         double height);

@@ -3,7 +3,8 @@
 
 #include "shape.h"
 
-class Rectangle : public Shape {
+class Rectangle : public Shape
+{
 public:
     Rectangle(double leftX, double bottomY, double rightX, double topY);
     double getArea() const override;

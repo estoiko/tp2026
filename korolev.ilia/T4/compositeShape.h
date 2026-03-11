@@ -4,9 +4,10 @@
 #include "shape.h"
 #include <vector>
 #include <memory>
-#include <iostream>
+#include <ostream>
 
-class CompositeShape : public Shape {
+class CompositeShape : public Shape
+{
 public:
     CompositeShape();
     void addShape(std::unique_ptr<Shape> shape);

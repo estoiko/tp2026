@@ -3,23 +3,30 @@
 #include <limits>
 #include <iomanip>
 #include <cmath>
-CompositeShape::CompositeShape() {
+
+CompositeShape::CompositeShape()
+{
 }
 
-void CompositeShape::addShape(std::unique_ptr<Shape> shape) {
+void CompositeShape::addShape(std::unique_ptr<Shape> shape)
+{
     shapes_.push_back(std::move(shape));
 }
 
-double CompositeShape::getArea() const {
+double CompositeShape::getArea() const
+{
     double totalArea = 0.0;
-    for (const auto& shape : shapes_) {
+    for (const auto& shape : shapes_)
+    {
         totalArea = totalArea + shape->getArea();
     }
     return totalArea;
 }
 
-Point CompositeShape::getCenter() const {
-    if (shapes_.empty()) {
+Point CompositeShape::getCenter() const
+{
+    if (shapes_.empty())
+    {
         return Point(0.0, 0.0);
     }
 
@@ -28,7 +35,8 @@ Point CompositeShape::getCenter() const {
     double minY = std::numeric_limits<double>::max();
     double maxY = std::numeric_limits<double>::lowest();
 
-    for (const auto& shape : shapes_) {
+    for (const auto& shape : shapes_)
+    {
         Point center = shape->getCenter();
         double area = shape->getArea();
         double halfSize = std::sqrt(area) / 2.0;
@@ -47,15 +55,19 @@ Point CompositeShape::getCenter() const {
     return Point(centerX, centerY);
 }
 
-void CompositeShape::move(double dx, double dy) {
-    for (auto& shape : shapes_) {
+void CompositeShape::move(double dx, double dy)
+{
+    for (auto& shape : shapes_)
+    {
         shape->move(dx, dy);
     }
 }
 
-void CompositeShape::scale(double factor) {
+void CompositeShape::scale(double factor)
+{
     Point center = getCenter();
-    for (auto& shape : shapes_) {
+    for (auto& shape : shapes_)
+    {
         Point shapeCenter = shape->getCenter();
         double moveX = (shapeCenter.x_ - center.x_) * (factor - 1.0);
         double moveY = (shapeCenter.y_ - center.y_) * (factor - 1.0);
@@ -64,17 +76,21 @@ void CompositeShape::scale(double factor) {
     }
 }
 
-const char* CompositeShape::getName() const {
+const char* CompositeShape::getName() const
+{
     return "COMPOSITE";
 }
 
-void CompositeShape::printDetails(std::ostream& out) const {
+void CompositeShape::printDetails(std::ostream& out) const
+{
     out << std::fixed << std::setprecision(2);
     Point center = getCenter();
     out << "[COMPOSITE,(" << center.x_ << ", " << center.y_ << "), "
         << getArea() << ": ";
-    for (size_t i = 0; i < shapes_.size(); ++i) {
-        if (i > 0) {
+    for (size_t i = 0; i < shapes_.size(); ++i)
+    {
+        if (i > 0)
+        {
             out << ", ";
         }
         Point shapeCenter = shapes_[i]->getCenter();
