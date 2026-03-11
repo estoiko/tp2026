@@ -39,18 +39,16 @@ int main() {
 
         shapes.push_back(std::move(group));
 
-        std::cout << "------------ BEFORE SCALING -------------" << '\n';
         printinfo(shapes);
 
         for (size_t i = 0; i < shapes.size(); i++) {
             shapes[i]->scale(2.0);
         }
 
-        std::cout << "------------ AFTER SCALING -------------" << '\n';
         printinfo(shapes);
     }
     catch (const std::exception& e) {
-        std::cout << e.what() << '\n';
+        std::cerr << e.what() << '\n';
         return 1;
     }
 
