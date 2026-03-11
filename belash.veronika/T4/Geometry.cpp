@@ -37,6 +37,7 @@ void printInfo(const std::vector<std::unique_ptr<Shape>>& shapes) {
 int main() {
     try {
         std::vector<std::unique_ptr<Shape>> shapes;
+
         shapes.push_back(std::make_unique<Rectangle>(Point(0, 0), Point(2, 3)));
         shapes.push_back(std::make_unique<Ellipse>(Point(5, 5), 2.0, 1.5));
         shapes.push_back(std::make_unique<RightTrapezoid>(Point(1, 1), 4.0, 2.0, 2.0));
