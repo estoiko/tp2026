@@ -17,7 +17,6 @@ public:
     CompositeShape() {}
     ~CompositeShape()
     {
-        members.clear();
         members.~vector();
     }
 
