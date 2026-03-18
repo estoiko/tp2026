@@ -26,3 +26,7 @@ double Square::getY_max()
 {
     return A.y + length;
 }
+void Square::print()
+{
+    std::cout << "[" << getName() << ", (" << getCenter().x << ", " << getCenter().y << "), " << getArea() << "]\n";
+}
