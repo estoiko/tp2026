@@ -62,10 +62,8 @@ std::string CompositeShape::getName() const {
 
 void CompositeShape::print() const {
     Shape::print();
-    std::cout << ":\n";
     for (size_t i = 0; i < shapes.size(); i++) {
-        std::cout << "  ";
-        shapes[i]->print();
         std::cout << "\n";
+        shapes[i]->print();
     }
 }

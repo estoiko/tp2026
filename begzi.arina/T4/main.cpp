@@ -1,13 +1,22 @@
 #include <vector>
 #include <memory>
 #include <iostream>
+#include <cstdlib>
 #include "rectangle.h"
 #include "circle.h"
 #include "trapezoid.h"
 #include "composite_shape.h"
 
 int main(int argc, char* argv[]) {
-    (void)argv;
+    if (argc == 1) {
+        std::cerr << "Error: No input arguments provided" << std::endl;
+        return 1;
+    }
+
+    double scaleFactor = std::atof(argv[1]);
+    if (scaleFactor <= 0) {
+        scaleFactor = 2.0;
+    }
 
     std::vector<std::unique_ptr<Shape>> scene;
 
@@ -28,18 +37,13 @@ int main(int argc, char* argv[]) {
     }
 
     for (size_t i = 0; i < scene.size(); i++) {
-        scene[i]->scale(2.0);
+        scene[i]->scale(scaleFactor);
     }
 
     std::cout << "\n--- AFTER SCALE ---\n";
     for (size_t i = 0; i < scene.size(); i++) {
         scene[i]->print();
         std::cout << "\n";
-    }
-
-    if (argc == 1) {
-        std::cerr << "Error: No input arguments provided" << std::endl;
-        return 1;
     }
 
     return 0;
