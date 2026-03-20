@@ -109,11 +109,3 @@ shape->scale(factor);
 std::string CompositeShape::getName() const {
 return "COMPOSITE";
 }
-
-std::unique_ptr<Shape> CompositeShape::clone() const {
-auto copy = std::make_unique<CompositeShape>();
-for (const auto& shape : shapes_) {
-copy->addShape(shape->clone());
-}
-return copy;
-}

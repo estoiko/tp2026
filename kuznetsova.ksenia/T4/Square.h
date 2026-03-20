@@ -10,7 +10,6 @@ double side_;
 
 public:
 Square(const Point& bottomLeft, double sideLength);
-std::unique_ptr<Shape>Square::clone() const;
 double getArea() const override;
 Point getCenter() const override;
 void move(double dx, double dy) override;

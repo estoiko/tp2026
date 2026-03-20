@@ -13,9 +13,6 @@ throw std::invalid_argument("Error: The zoom level should be positive..");
 }
 }
 
-std::unique_ptr<Shape> Rectangle::clone() const {
-return std::make_unique<Rectangle>(*this);
-}
 
 double Rectangle::getArea() const {
 double width = topRight.x - bottomLeft.x;

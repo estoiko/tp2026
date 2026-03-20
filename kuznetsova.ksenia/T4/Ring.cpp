@@ -19,11 +19,6 @@ if (outR_ <= inR_) {
 throw std::invalid_argument("Outer radius must be greater than inner radius.");
 }
 }
-
-std::unique_ptr<Shape> Rectangle::clone() const {
-return std::make_unique<Ring>(*this);
-}
-
 double Ring::getArea() const {
 return M_PI * (outR_ * outR_ - inR_ * inR_);
 }
