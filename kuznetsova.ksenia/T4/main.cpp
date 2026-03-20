@@ -310,8 +310,6 @@ std::cout << "\n";
 }
 
 int main() {
-setlocale(LC_ALL, "C");
-
 std::cout << "\n";
 std::cout << "SHAPES PROGRAM TESTING\n";
 
