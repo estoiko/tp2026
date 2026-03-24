@@ -28,8 +28,12 @@ int main() {
     double factorInput;
     std::cin >> factorInput;
     if (std::cin.fail()) {
-        std::cerr << "ERROR. Wrong data format\n";
-        return 1;
+        if (std::cin.eof()) {
+            factorInput = 1.0;
+        } else {
+            std::cerr << "ERROR. Wrong data format\n";
+            return 1;
+        }
     }
     for (auto& s : shapes)
         s->scale(factorInput);
