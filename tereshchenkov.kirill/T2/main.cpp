@@ -8,7 +8,7 @@
 #include <limits>
 
 namespace nspace {
-    struct Datastruct {
+    struct DataStruct {
         double key1 = 0;
         unsigned long long key2 = 0;
         std::string key3;
@@ -25,11 +25,11 @@ namespace nspace {
     std::istream& operator>>(std::istream& in, DoubleIO&& dest);
     std::istream& operator>>(std::istream& in, BinUllIO&& dest);
     std::istream& operator>>(std::istream& in, StringIO&& dest);
-    std::istream& operator>>(std::istream& in, Datastruct& dest);
-    std::ostream& operator<<(std::ostream& out, const Datastruct& dest);
+    std::istream& operator>>(std::istream& in, DataStruct& dest);
+    std::ostream& operator<<(std::ostream& out, const DataStruct& dest);
 
     void printBinary(std::ostream& out, unsigned long long n);
-    bool compare_data(const Datastruct& a, const Datastruct& b);
+    bool compare_data(const DataStruct& a, const DataStruct& b);
 
     class iofmtguard {
     public:
@@ -43,20 +43,14 @@ namespace nspace {
 }
 
 int main() {
-    using nspace::Datastruct;
+    using nspace::DataStruct;
 
-    std::string opa = R"(
-        (:key1 1.2e+2:key2 0b101:key3 "Success":)
-        (:key2 0b1101:key3 "Mixed Order":key1 1.3e-2:)
-    )";
-
-    std::istringstream iss(opa);
-    std::vector<Datastruct> vec;
+    std::vector<DataStruct> vec;
 
     std::copy(
-        std::istream_iterator<Datastruct>(iss),
-        std::istream_iterator<Datastruct>(),
-        std::back_inserter(vec)
+        std::istream_iterator<DataStruct>(std::cin),
+    std::istream_iterator<DataStruct>(),
+    std::back_inserter(vec)
     );
 
     std::sort(vec.begin(), vec.end(), nspace::compare_data);
@@ -118,11 +112,11 @@ namespace nspace {
         return in;
     }
 
-    std::istream& operator>>(std::istream& in, Datastruct& dest) {
+    std::istream& operator>>(std::istream& in, DataStruct& dest) {
         std::istream::sentry sentry(in);
         if (!sentry) return in;
 
-        Datastruct temp;
+        DataStruct temp;
         in >> DelimiterIO{'('} >> DelimiterIO{':'};
 
         for (int i = 0; i < 3; ++i) {
@@ -143,9 +137,13 @@ namespace nspace {
         return in;
     }
 
-    std::ostream& operator<<(std::ostream& out, const Datastruct& src) {
+    std::ostream& operator<<(std::ostream& out, const DataStruct& src) {
         iofmtguard guard(out);
-        out << "(:key1 " << std::scientific << std::fixed << std::setprecision(1) << src.key1;
+        out << "(:key1 "
+        << std::scientific
+        << std::uppercase
+        << std::setprecision(1)
+        << src.key1;
         out << ":key2 ";
         printBinary(out, src.key2);
         out << ":key3 \"" << src.key3 << "\":)";
@@ -163,7 +161,7 @@ namespace nspace {
         out << "0b" << s;
     }
 
-    bool compare_data(const Datastruct& a, const Datastruct& b) {
+    bool compare_data(const DataStruct& a, const DataStruct& b) {
         if (a.key1 != b.key1) return a.key1 < b.key1;
         if (a.key2 != b.key2) return a.key2 < b.key2;
         return a.key3.length() < b.key3.length();
