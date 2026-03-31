@@ -47,7 +47,7 @@ int main()
     }
 
     double scaleFactor = 2.0;
-    
+
     if (scaleFactor <= 0.0)
     {
         std::cerr << "Scale factor must be positive\n";
