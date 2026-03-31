@@ -12,8 +12,8 @@ public:
     virtual std::string getName() const = 0;
     
     friend std::ostream& operator<<(std::ostream& os, const Shape& shape) {
-    os << "[" << shape.getName() << ", " 
-       << shape.getCenter() << ", " 
+    os << "[" << shape.getName() << ", "
+       << shape.getCenter() << ", "
        << shape.getArea() << "]";
     return os;
 }

@@ -110,14 +110,14 @@ void CompositeShape::getBounds(double& minX, double& minY, double& maxX, double&
 }
 
 std::ostream& operator<<(std::ostream& os, const CompositeShape& composite) {
-    os << "[" << composite.getName() << ", " 
-       << composite.getCenter() << ", " 
+    os << "[" << composite.getName() << ", "
+       << composite.getCenter() << ", "
        << composite.getArea() << ":\n";
     
     for (size_t i = 0; i < composite.shapes_.size(); ++i) {
         const Shape* shape = composite.shapes_[i].get();
-        os << "    " << shape->getName() << ", " 
-           << shape->getCenter() << ", " 
+        os << "    " << shape->getName() << ", "
+           << shape->getCenter() << ", "
            << shape->getArea();
         
         if (i < composite.shapes_.size() - 1) {

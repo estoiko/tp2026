@@ -6,14 +6,16 @@
 
 class Circle : public Shape {
 public:
-    Circle(const Point& center, double radius); 
+    Circle(const Point& center, double radius);
     double getArea() const override;
     Point getCenter() const override;
     void move(double a, double b) override;
     void scale(double c) override;
     std::string getName() const override;
 
-    double getRadius() const { return radius_; }
+    double getRadius() const {
+        return radius_;
+    }
 private:
     Point center_;
     double radius_;

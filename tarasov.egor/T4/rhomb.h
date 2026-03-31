@@ -6,15 +6,19 @@
 
 class Rhomb : public Shape {
 public:
-    Rhomb(const Point& center, double length, double width); 
+    Rhomb(const Point& center, double length, double width);
     double getArea() const override;
     Point getCenter() const override;
     void move(double a, double b) override;
     void scale(double c) override;
     std::string getName() const override;
 
-    double getLength() const { return length_; }
-    double getWidth() const { return width_; }
+    double getLength() const {
+        return length_;
+    }
+    double getWidth() const {
+        return width_;
+    }
 private:
     Point center_;
     double length_;
