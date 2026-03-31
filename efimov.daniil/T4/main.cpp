@@ -3,8 +3,8 @@
 #include <memory>
 #include <vector>
 #include "Rectangle.h"
-#include "circle.h"
-#include "RectangularTrapezoid.h"
+#include "Circle.h"
+#include "rectangularTrapezoid.h"
 #include "compositeShape.h"
 
 void printInfo(const std::vector<std::unique_ptr<Shape>>& shapes)
