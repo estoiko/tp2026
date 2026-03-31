@@ -46,11 +46,9 @@ int main()
         printShape(*shape);
     }
 
-    double scaleFactor = 0.0;
-    std::cout << "Enter scale factor: ";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-    if (!(std::cin >> scaleFactor) || scaleFactor <= 0.0)
+    double scaleFactor = 2.0;
+    
+    if (scaleFactor <= 0.0)
     {
         std::cerr << "Scale factor must be positive\n";
         return 1;
