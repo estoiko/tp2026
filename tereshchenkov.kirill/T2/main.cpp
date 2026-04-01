@@ -15,18 +15,36 @@ namespace nspace {
 
     struct DelimiterIO { char exp; };
     struct KeyIO { std::string& ref; };
-    struct DoubleIO { double& ref; };
+    struct DoubleSciIO { double& ref; };
     struct BinUllIO { unsigned long long& ref; };
     struct StringIO { std::string& ref; };
+
+    struct iofmtguard {
+        iofmtguard(std::ostream& s) : s_(s), fill_(s.fill()), precision_(s.precision()), fmt_(s.flags()) {}
+        ~iofmtguard() { s_.fill(fill_); s_.precision(precision_); s_.flags(fmt_); }
+    private:
+        std::ostream& s_; char fill_; std::streamsize precision_; std::ios::fmtflags fmt_;
+    };
+
+    void printBinary(std::ostream& out, unsigned long long val) {
+        out << "0b";
+        if (val == 0) { out << "0"; return; }
+        std::string s;
+        unsigned long long temp = val;
+        while (temp > 0) {
+            s += (temp & 1 ? '1' : '0');
+            temp >>= 1;
+        }
+        std::reverse(s.begin(), s.end());
+        out << s;
+    }
 
     std::istream& operator>>(std::istream& in, DelimiterIO&& dest) {
         std::istream::sentry sentry(in);
         if (!sentry) return in;
         char c;
         in >> c;
-        if (in && std::tolower(c) != std::tolower(dest.exp)) {
-            in.setstate(std::ios::failbit);
-        }
+        if (in && std::tolower(c) != std::tolower(dest.exp)) in.setstate(std::ios::failbit);
         return in;
     }
 
@@ -42,29 +60,52 @@ namespace nspace {
         return in;
     }
 
-    std::istream& operator>>(std::istream& in, DoubleIO&& dest) {
-        if (!(in >> dest.ref)) return in;
-        if (std::tolower(in.peek()) == 'd') in.get();
+    std::istream& operator>>(std::istream& in, DoubleSciIO&& dest) {
+        std::istream::sentry sentry(in);
+        if (!sentry) return in;
+        std::string temp;
+        in >> std::ws;
+
+        while (in.peek() != ':' && in.peek() != ' ' && in.peek() != ')' && in.peek() != EOF) {
+            temp += (char)in.get();
+        }
+
+        bool hasE = (temp.find('e') != std::string::npos || temp.find('E') != std::string::npos);
+        auto it = std::find_if(temp.begin(), temp.end(), [](char ch) {
+            ch = std::tolower(ch);
+            return !std::isdigit(ch) && ch != '.' && ch != 'e' && ch != '-' && ch != '+';
+        });
+
+        if (!hasE || it != temp.end() || temp.empty()) {
+            in.setstate(std::ios::failbit);
+            return in;
+        }
+
+        try {
+            dest.ref = std::stod(temp);
+        } catch (...) {
+            in.setstate(std::ios::failbit);
+        }
         return in;
     }
 
     std::istream& operator>>(std::istream& in, BinUllIO&& dest) {
         std::istream::sentry sentry(in);
         if (!sentry) return in;
-        std::string prefix(2, '\0');
-        in >> prefix[0] >> prefix[1];
-        if (prefix == "0b" || prefix == "0B") {
+        in >> std::ws;
+        char c1, c2;
+        if (in >> c1 >> c2 && (c1 == '0' && std::tolower(c2) == 'b')) {
             std::string bits;
-            while (std::isdigit(in.peek())) bits += static_cast<char> (in.get());
-            try { dest.ref = std::stoull(bits, nullptr, 2); }
-            catch (...) { in.setstate(std::ios::failbit); }
-        } else {
-            in.setstate(std::ios::failbit);
-        }
+            while (std::isdigit(in.peek())) bits += (char)in.get();
+            if (bits.empty()) dest.ref = 0;
+            else dest.ref = std::stoull(bits, nullptr, 2);
+        } else in.setstate(std::ios::failbit);
         return in;
     }
 
     std::istream& operator>>(std::istream& in, StringIO&& dest) {
+        std::istream::sentry sentry(in);
+        if (!sentry) return in;
         char c;
         if (!(in >> c) || c != '"') return in.setstate(std::ios::failbit), in;
         std::getline(in, dest.ref, '"');
@@ -80,25 +121,28 @@ namespace nspace {
         for (int i = 0; i < 3; ++i) {
             std::string key;
             in >> KeyIO{key};
-            if (key == "key1") in >> DoubleIO{temp.key1};
+            if (key == "key1") in >> DoubleSciIO{temp.key1};
             else if (key == "key2") in >> BinUllIO{temp.key2};
             else if (key == "key3") in >> StringIO{temp.key3};
             else { in.setstate(std::ios::failbit); break; }
-            in >> DelimiterIO{':'};
+
+            if (!(in >> DelimiterIO{':'})) break;
         }
         if (in >> DelimiterIO{')'}) dest = temp;
         return in;
     }
 
     std::ostream& operator<<(std::ostream& out, const DataStruct& src) {
-        out << "(:key1 " << std::scientific << std::setprecision(1) << std::nouppercase << src.key1;
-        out << ":key2 0b" << (src.key2 == 0 ? "0" : "");
-        if (src.key2 > 0) {
-            std::string b;
-            for (unsigned long long n = src.key2; n > 0; n /= 2) b += (n % 2 ? '1' : '0');
-            std::reverse(b.begin(), b.end());
-            out << b;
+        iofmtguard guard(out);
+        std::ostringstream oss;
+        oss << std::scientific << std::setprecision(1) << std::nouppercase << src.key1;
+        std::string res = oss.str();
+        size_t e_pos = res.find('e');
+        if (e_pos != std::string::npos && res.size() > e_pos + 2) {
+            if (res[e_pos + 2] == '0' && std::isdigit(res.back())) res.erase(e_pos + 2, 1);
         }
+        out << "(:key1 " << res << ":key2 ";
+        printBinary(out, src.key2);
         out << ":key3 \"" << src.key3 << "\":)";
         return out;
     }
@@ -117,11 +161,10 @@ int main() {
     while (std::getline(std::cin, line)) {
         if (line.empty()) continue;
         std::istringstream iss(line);
-        std::copy(
-            std::istream_iterator<nspace::DataStruct>(iss),
-            std::istream_iterator<nspace::DataStruct>(),
-            std::back_inserter(vec)
-        );
+        nspace::DataStruct temp;
+        if (iss >> temp) {
+            vec.push_back(temp);
+        }
     }
 
     std::sort(vec.begin(), vec.end(), nspace::compare_data);
