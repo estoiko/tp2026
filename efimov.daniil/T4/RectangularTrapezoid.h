@@ -4,11 +4,11 @@
 #include "Point.h"
 #include <string>
 
-class rectangularTrapezoid : public Shape
+class RectangularTrapezoid : public Shape
 {
 public:
-    rectangularTrapezoid(const Point& bl, double bottomW, double topW, double h);
-    ~rectangularTrapezoid() override = default;
+    RectangularTrapezoid(const Point& bl, double bottomW, double topW, double h);
+    ~RectangularTrapezoid() override = default;
 
     double getArea() const override;
     Point getCenter() const override;

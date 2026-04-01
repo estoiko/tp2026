@@ -1,8 +1,8 @@
-#include "rectangularTrapezoid.h"
+#include "RectangularTrapezoid.h"
 #include <stdexcept>
 #include <algorithm>
 
-rectangularTrapezoid::rectangularTrapezoid(const Point& bl, double bottomW, double topW, double h)
+RectangularTrapezoid::RectangularTrapezoid(const Point& bl, double bottomW, double topW, double h)
     : bottomLeft(bl), bottomWidth(bottomW), topWidth(topW), height(h)
 {
     if (bottomWidth <= 0.0 || topWidth <= 0.0 || height <= 0.0)
@@ -11,25 +11,25 @@ rectangularTrapezoid::rectangularTrapezoid(const Point& bl, double bottomW, doub
     }
 }
 
-double rectangularTrapezoid::getArea() const
+double RectangularTrapezoid::getArea() const
 {
     return (bottomWidth + topWidth) / 2.0 * height;
 }
 
-Point rectangularTrapezoid::getCenter() const
+Point RectangularTrapezoid::getCenter() const
 {
     double centerX = bottomLeft.x + (bottomWidth + topWidth) / 4.0;
     double centerY = bottomLeft.y + height / 2.0;
     return Point(centerX, centerY);
 }
 
-void rectangularTrapezoid::move(double dx, double dy)
+void RectangularTrapezoid::move(double dx, double dy)
 {
     bottomLeft.x += dx;
     bottomLeft.y += dy;
 }
 
-void rectangularTrapezoid::scale(double factor)
+void RectangularTrapezoid::scale(double factor)
 {
     if (factor <= 0.0)
     {
@@ -46,12 +46,12 @@ void rectangularTrapezoid::scale(double factor)
     bottomLeft.y = center.y + (bottomLeft.y - center.y) * factor;
 }
 
-std::string rectangularTrapezoid::getName() const
+std::string RectangularTrapezoid::getName() const
 {
     return "RECTANGULAR_TRAPEZOID";
 }
 
-std::pair<Point, Point> rectangularTrapezoid::getFrame() const
+std::pair<Point, Point> RectangularTrapezoid::getFrame() const
 {
     double minX = bottomLeft.x;
     double maxX = bottomLeft.x + std::max(bottomWidth, topWidth);

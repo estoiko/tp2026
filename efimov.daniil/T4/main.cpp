@@ -4,7 +4,7 @@
 #include <vector>
 #include "Rectangle.h"
 #include "Circle.h"
-#include "rectangularTrapezoid.h"
+#include "RectangularTrapezoid.h"
 #include "CompositeShape.h"
 
 void printInfo(const std::vector<std::unique_ptr<Shape>>& shapes)
@@ -48,13 +48,13 @@ int main()
 
     shapes.push_back(std::make_unique<Rectangle>(Point(0, 0), Point(4, 3)));
     shapes.push_back(std::make_unique<Circle>(Point(5, 5), 2));
-    shapes.push_back(std::make_unique<rectangularTrapezoid>(Point(-2, -1), 4, 2, 3));
-    shapes.push_back(std::make_unique<rectangularTrapezoid>(Point(-3, 2), 3, 1, 2));
+    shapes.push_back(std::make_unique<RectangularTrapezoid>(Point(-2, -1), 4, 2, 3));
+    shapes.push_back(std::make_unique<RectangularTrapezoid>(Point(-3, 2), 3, 1, 2));
 
     auto composite = std::make_unique<CompositeShape>();
     composite->addShape(std::make_unique<Rectangle>(Point(2, -2), Point(5, 1)));
     composite->addShape(std::make_unique<Circle>(Point(-1, 0), 1.5));
-    composite->addShape(std::make_unique<rectangularTrapezoid>(Point(6, 1), 2, 1, 2));
+    composite->addShape(std::make_unique<RectangularTrapezoid>(Point(6, 1), 2, 1, 2));
 
     shapes.push_back(std::move(composite));
 
