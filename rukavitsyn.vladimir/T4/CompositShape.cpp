@@ -33,10 +33,6 @@ void CompositeShape::move(double dx, double dy) {
 }
 
 void CompositeShape::scale(double factor) {
-    if (factor <= 0.0) {
-        return;
-    }
-
     Point compositeCenter = getCenter();
 
     for (auto& shape : shapes) {

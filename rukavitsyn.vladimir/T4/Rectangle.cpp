@@ -1,9 +1,13 @@
 #include "Rectangle.h"
+#include <algorithm>
+#include <stdexcept>
 
-Rectangle::Rectangle(const Point& bl, const Point& tr) :
-    bottomLeft_(bl),
-    topRight_(tr)
-{
+Rectangle::Rectangle(const Point& bl, const Point& tr) {
+    if (bl.x_ >= tr.x_ || bl.y_ >= tr.y_) {
+        throw std::invalid_argument("Error: Invalid rectangle coordinates. ");
+    }
+    bottomLeft_ = bl;
+    topRight_ = tr;
 }
 
 double Rectangle::getArea() const {
@@ -25,27 +29,27 @@ void Rectangle::move(double dx, double dy) {
 }
 
 void Rectangle::scale(double factor) {
-    double vectorBLx = getCenter().x_ - bottomLeft_.x_;
-    double vectorBLy = getCenter().y_ - bottomLeft_.y_;
-    double vectorTRx = topRight_.x_ - getCenter().x_;
-    double vectorTRy = topRight_.y_ - getCenter().y_;
-    topRight_.x_ = getCenter().x_ + (vectorTRx * factor);
-    topRight_.y_ = getCenter().y_ + (vectorTRy * factor);
-    bottomLeft_.x_ = getCenter().x_ + (vectorBLx * factor);
-    bottomLeft_.y_ = getCenter().y_ + (vectorBLy * factor);
+    Point center = getCenter();
+    double dxBL = bottomLeft_.x_ - center.x_;
+    double dyBL = bottomLeft_.y_ - center.y_;
+    double dxTR = topRight_.x_ - center.x_;
+    double dyTR = topRight_.y_ - center.y_;
+
+    bottomLeft_.x_ = center.x_ + dxBL * factor;
+    bottomLeft_.y_ = center.y_ + dyBL * factor;
+    topRight_.x_ = center.x_ + dxTR * factor;
+    topRight_.y_ = center.y_ + dyTR * factor;
 }
 
 std::string Rectangle::getName() const {
     return "Rectangle";
 }
 
-std::pair<Point, Point> Rectangle::circumscribedRectangle() const
-{
+std::pair<Point, Point> Rectangle::circumscribedRectangle() const {
     return { bottomLeft_, topRight_ };
 }
 
-void Rectangle::print(std::ostream& stream) const
-{
+void Rectangle::print(std::ostream& stream) const {
     stream << getName() << ", Center = (" << getCenter().x_ << ", " << getCenter().y_ << "), ";
     stream << "Area = " << getArea() << ";\n";
 }
