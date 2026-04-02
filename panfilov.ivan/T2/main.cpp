@@ -77,9 +77,21 @@ std::istream& operator>>(std::istream& is, DataStruct& data) {
     std::string key3;
     bool key1_found = false, key2_found = false, key3_found = false;
     std::vector<std::string> parts;
+    bool in_quotes = false;
+    bool in_complex = false;
     size_t last_pos = 0;
+
     for (size_t i = 0; i < content.length(); ++i) {
-        if (content[i] == ':') {
+        if (content[i] == '"') {
+            in_quotes = !in_quotes;
+        }
+        else if (!in_quotes && content[i] == '#') {
+            in_complex = true;
+        }
+        else if (!in_quotes && content[i] == ')' && in_complex) {
+            in_complex = false;
+        }
+        else if (!in_quotes && !in_complex && content[i] == ':') {
             if (i > last_pos) {
                 parts.push_back(content.substr(last_pos, i - last_pos));
             }
