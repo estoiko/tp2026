@@ -5,7 +5,7 @@
 #include <iterator>
 #include <algorithm>
 #include <iomanip>
-
+#include <limits>
 
 struct DataStruct {
     double key1;
@@ -250,30 +250,25 @@ bool compareDataStruct(const DataStruct& a, const DataStruct& b) {
     return a.key3.length() < b.key3.length();
 }
 
-int main(void) {
+int main() {
     std::vector<DataStruct> data;
-    std::string line;
-
-    while (std::getline(std::cin, line)) {
-        if (line.empty()) {
-            continue;
-        }
-
-        std::istringstream iss(line);
-        DataStruct temp;
-
-        if (iss >> temp) {
-            data.push_back(temp);
+    while (!std::cin.eof()) {
+        std::copy(
+            std::istream_iterator<DataStruct>(std::cin),
+            std::istream_iterator<DataStruct>(),
+            std::back_inserter(data)
+        );
+        if (std::cin.fail()) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         }
     }
 
     std::sort(data.begin(), data.end(), compareDataStruct);
 
     std::copy(
-        data.begin(),
-        data.end(),
-        std::ostream_iterator<DataStruct>(std::cout, "\n")
-    );
-
+        std::begin(data),
+        std::end(data),
+        std::ostream_iterator<DataStruct>(std::cout, "\n"));
     return 0;
 }
