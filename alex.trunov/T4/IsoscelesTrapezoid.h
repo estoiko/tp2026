@@ -9,10 +9,14 @@
 class IsoscelesTrapezoid : public Shape {
 public:
     IsoscelesTrapezoid() = default;
-    IsoscelesTrapezoid(Point p, double a, double b, double c) :
-        bottomLeft_(p), bottomBase_(a),
-        topBase_(b), height_(c)
-    {
+    IsoscelesTrapezoid(Point bottomLeft, double bottomBase, double topBase, double height) {
+        if (bottomBase <= 0 || topBase <= 0 || height <= 0) {
+            throw std::invalid_argument("IsoscelesTrapezoid: bases and height must be positive");
+        }
+        bottomLeft_ = bottomLeft;
+        bottomBase_ = bottomBase;
+        topBase_ = topBase;
+        height_ = height;
     }
 
     double getArea() const override;

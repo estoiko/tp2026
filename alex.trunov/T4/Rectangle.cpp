@@ -1,6 +1,7 @@
 #include "Rectangle.h"
 #include <cmath>
 #include <string>
+#include <stdexcept>
 
 double Rectangle::getArea() const {
     double width = std::abs(topRight_.x_ - bottomLeft_.x_);
@@ -22,6 +23,9 @@ void Rectangle::move(double x, double y) {
 }
 
 void Rectangle::scale(double factor) {
+    if (factor <= 0) {
+        throw std::invalid_argument("Rectangle::scale: scale factor must be positive");
+    }
     Point center = getCenter();
     bottomLeft_.x_ = center.x_ + (bottomLeft_.x_ - center.x_) * factor;
     bottomLeft_.y_ = center.y_ + (bottomLeft_.y_ - center.y_) * factor;

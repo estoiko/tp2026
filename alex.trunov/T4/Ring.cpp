@@ -1,9 +1,12 @@
 #include "Ring.h"
 #include <cmath>
 #include <string>
+#include <stdexcept>
+
+constexpr PI = 3.1415;
 
 double Ring::getArea() const {
-    double sq = 3.1415 * (maxRad_ * maxRad_ - minRad_ * minRad_);
+    double sq = PI * (maxRad_ * maxRad_ - minRad_ * minRad_);
     return sq;
 }
 
@@ -17,6 +20,9 @@ void Ring::move(double x, double y) {
 }
 
 void Ring::scale(double factor) {
+    if (factor <= 0) {
+        throw std::invalid_argument("Ring::scale: scale factor must be positive");
+    }
     maxRad_ *= factor;
     minRad_ *= factor;
 }

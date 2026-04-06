@@ -1,6 +1,7 @@
 #include "IsoscelesTrapezoid.h"
 #include <cmath>
 #include <string>
+#include <stdexcept>
 
 double IsoscelesTrapezoid::getArea() const {
     double sq = height_ * (bottomBase_ + topBase_) / 2;
@@ -19,6 +20,9 @@ void IsoscelesTrapezoid::move(double x, double y) {
 }
 
 void IsoscelesTrapezoid::scale(double factor) {
+    if (factor <= 0) {
+        throw std::invalid_argument("IsoscelesTrapezoid::scale: scale factor must be positive");
+    }
     Point center = getCenter();
 
     bottomBase_ *= factor;

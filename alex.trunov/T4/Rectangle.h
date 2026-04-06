@@ -25,4 +25,4 @@ private:
     Point bottomLeft_, topRight_;
 };
 
-#endif
+#endif // !RECTANGLE_H

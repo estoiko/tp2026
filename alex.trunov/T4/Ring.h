@@ -9,9 +9,17 @@
 class Ring : public Shape {
 public:
     Ring() = default;
-    Ring(double r1, double r2, Point p) :
-        minRad_(r1), maxRad_(r2), center_(p)
-    { }
+    Ring(double r1, double r2, Point p) {
+        if (r1 < 0 || r2 < 0) {
+            throw std::invalid_argument("Ring::Ring: radii cannot be negative");
+        }
+        if (r1 > r2) {
+            throw std::invalid_argument("Ring::Ring: inner radius must be <= outer radius");
+        }
+        minRad_ = r1;
+        maxRad_ = r2;
+        center_ = p;
+    }
 
     double getArea() const override;
     Point getCenter() const override;

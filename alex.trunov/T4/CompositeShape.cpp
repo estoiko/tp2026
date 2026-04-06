@@ -3,6 +3,7 @@
 #include <memory>
 #include <limits>
 #include <iomanip>
+#include <stdexcept>
 
 double CompositeShape::getArea() const {
     double res = 0.0;
@@ -13,7 +14,6 @@ double CompositeShape::getArea() const {
 }
 
 Point CompositeShape::getCenter() const {
-
     double minX, minY, maxX, maxY;
     minX = std::numeric_limits<double>::max();
     minY = std::numeric_limits<double>::max();
@@ -42,6 +42,9 @@ void CompositeShape::move(double x, double y) {
 }
 
 void CompositeShape::scale(double factor) {
+    if (factor <= 0) {
+        throw std::invalid_argument("CompositeShape::scale: scale factor must be positive");
+    }
     Point center = getCenter();
 
     for (auto& s : shapes_) {

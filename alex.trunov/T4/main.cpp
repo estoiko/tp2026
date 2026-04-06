@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 #include <cmath>
+#include "Shape.h"
 #include "Rectangle.h"
 #include "Ring.h"
 #include "IsoscelesTrapezoid.h"
@@ -118,7 +119,9 @@ void testComposite() {
 
     double oldAreaComp = composite->getArea();
 
-    const double factor = 2.0;
+    double factor;
+    std::cout << "Enter scale factor: ";
+    std::cin >> factor;
 
     composite->scale(factor);
     std::cout << "After scale(" << factor << "): area = " << composite->getArea() << "\n";
@@ -152,5 +155,5 @@ int main() {
     std::cout << "\tALL TESTS COMPLETED\n";
     std::cout << std::string(40, '=') << "\n";
 
-    return 0;
+    return 1;
 }
