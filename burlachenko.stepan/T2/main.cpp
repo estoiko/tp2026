@@ -175,8 +175,8 @@ std::istream& operator>>(std::istream& is, DataStruct& ds)
 
             while(is.get(c))
             {
-                if (c == '"') break; // идем до закрывающей "
                 token += c;
+                if (c == '"') break; // идем до закрывающей "
             }
 
             while (is.get(c) && c != ':') {}
