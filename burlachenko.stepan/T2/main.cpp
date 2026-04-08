@@ -243,11 +243,21 @@ int main()
     std::vector<DataStruct> data;
 
 
-    std::copy(
-        std::istream_iterator<DataStruct>(std::cin),
-        std::istream_iterator<DataStruct>(),
-        std::back_inserter(data)
-    );
+    DataStruct ds;
+    while (std::cin)
+    {
+        if (std::cin >> ds)
+        {
+            data.push_back(ds);
+        }
+        else
+        {
+            std::cin.clear();
+            std::string skip;
+            std::getline(std::cin, skip);
+        }
+    }
+
 
     std::sort(data.begin(), data.end(), compare);
 
