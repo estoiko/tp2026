@@ -175,6 +175,30 @@ struct AreaIfVertexCount {
     }
 };
 
+struct AreaCompare {
+    bool operator()(const Polygon &a, const Polygon &b) {
+        return AreaCalculator()(a) < AreaCalculator()(b);
+    }
+};
+
+struct NumOfVertexesCompare {
+    bool operator()(const Polygon &a, const Polygon &b) {
+        return a.points.size() < b.points.size();
+    }
+};
+
+struct IsNumOfVertexes {
+    std::size_t n;
+
+    IsNumOfVertexes(std::size_t n)
+        : n(n)
+    {}
+
+    bool operator()(const Polygon &p) {
+        return p.points.size() == n;
+    }
+};
+
 int main(int argc, char* argv[]) {
     if (argc != 2) {
         std::cerr << "ERROR: No file name provided or incorrect file name\n";
@@ -218,20 +242,21 @@ int main(int argc, char* argv[]) {
 
         std::string main_cmd;
         iss >> main_cmd;
+
+        std::string sub_cmd;
+        iss >> sub_cmd;
+
+        if (iss >> std::ws && !iss.eof()) {
+            std::cout << "<INVALID COMMAND>\n";
+            continue;
+        }
+
         if (main_cmd == "AREA") {
-            std::string sub_cmd;
-            iss >> sub_cmd;
-
-            if (iss >> std::ws && !iss.eof()) {
-                std::cout << "<INVALID COMMAND>\n";
-                continue;
-            }
-
             if (sub_cmd == "EVEN") {
                 double area = std::accumulate(
                     polygons.begin(),
                     polygons.end(),
-                    0LL,
+                    0.0,
                     SumIfEven()
                 );
 
@@ -240,7 +265,7 @@ int main(int argc, char* argv[]) {
                 double area = std::accumulate(
                     polygons.begin(),
                     polygons.end(),
-                    0LL,
+                    0.0,
                     SumIfOdd()
                 );
 
@@ -254,7 +279,7 @@ int main(int argc, char* argv[]) {
                 double area = std::accumulate(
                     polygons.begin(),
                     polygons.end(),
-                    0LL,
+                    0.0,
                     SumArea()
                 );
 
@@ -286,7 +311,104 @@ int main(int argc, char* argv[]) {
                 }
             }
         } else if (main_cmd == "MAX") {
-            // ...
+            if (polygons.empty()) {
+                std::cerr << "<INVALID COMMAND>\n";
+                continue;
+            }
+
+            if (sub_cmd == "AREA") {
+                auto max_element_it = std::max_element(
+                    polygons.begin(),
+                    polygons.end(),
+                    AreaCompare()
+                );
+
+                // надо ли проверить итератор перед разыменованием?
+                std::cout << AreaCalculator()(*max_element_it) << "\n";
+            } else if (sub_cmd == "VERTEXES") {
+                auto max_element_it = std::max_element(
+                    polygons.begin(),
+                    polygons.end(),
+                    NumOfVertexesCompare()
+                );
+
+                std::cout << (*max_element_it).points.size() << "\n";
+            } else {
+                std::cerr << "<INVALID COMMAND>\n";
+                continue;
+            }
+        } else if (main_cmd == "MIN") {
+            if (polygons.empty()) {
+                std::cerr << "<INVALID COMMAND>\n";
+                continue;
+            }
+
+            if (sub_cmd == "AREA") {
+                auto min_element_it = std::min_element(
+                    polygons.begin(),
+                    polygons.end(),
+                    AreaCompare()
+                );
+
+                std::cout << AreaCalculator()(*min_element_it) << "\n";
+            } else if (sub_cmd == "VERTEXES") {
+                auto min_element_it = std::min_element(
+                    polygons.begin(),
+                    polygons.end(),
+                    NumOfVertexesCompare()
+                );
+
+                std::cout << (*min_element_it).points.size() << "\n";
+            } else {
+                std::cerr << "<INVALID COMMAND>\n";
+                continue;
+            }
+        } else if (main_cmd == "COUNT") {
+            if (sub_cmd == "EVEN") {
+                std::size_t cnt = std::count_if(
+                    polygons.begin(),
+                    polygons.end(),
+                    IsEven()
+                );
+
+                std::cout << cnt << "\n";
+            } else if (sub_cmd == "ODD") {
+                auto isOdd = std::not_fn(IsEven());
+                std::size_t cnt = std::count_if(
+                    polygons.begin(),
+                    polygons.end(),
+                    isOdd
+                );
+
+                std::cout << cnt << "\n";
+            } else {
+                try {
+                    std::size_t pos = 0;
+                    std::size_t num_of_vertexes = std::stoul(sub_cmd, &pos);
+
+                    if (pos != sub_cmd.size()) {
+                        throw std::invalid_argument("ERROR: not pure number");
+                    }
+
+                    if (num_of_vertexes <= 0) {
+                        throw std::invalid_argument("ERROR: incorrect number of vertexes");
+                    }
+
+                    std::size_t cnt = std::count_if(
+                        polygons.begin(),
+                        polygons.end(),
+                        IsNumOfVertexes(num_of_vertexes)
+                    );
+
+                    std::cout << cnt << "\n";
+                } catch (...) {
+                    std::cerr << "<INVALID COMMAND>\n";
+                    continue;
+                }
+            }
+        } else {
+            std::cerr << "<INVALID COMMAND>\n";
+            continue;
         }
     }
 
