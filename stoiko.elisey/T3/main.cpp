@@ -176,13 +176,13 @@ struct AreaIfVertexCount {
 };
 
 struct AreaCompare {
-    bool operator()(const Polygon &a, const Polygon &b) {
+    bool operator()(const Polygon &a, const Polygon &b) const {
         return AreaCalculator()(a) < AreaCalculator()(b);
     }
 };
 
 struct NumOfVertexesCompare {
-    bool operator()(const Polygon &a, const Polygon &b) {
+    bool operator()(const Polygon &a, const Polygon &b) const {
         return a.points.size() < b.points.size();
     }
 };
@@ -196,6 +196,60 @@ struct IsNumOfVertexes {
 
     bool operator()(const Polygon &p) {
         return p.points.size() == n;
+    }
+};
+
+struct PointCompare {
+    bool operator()(const Point &a, const Point &b) const {
+        if (a.x != b.y)
+            return a.x < b.x;
+        return a.y < b.y;
+    }
+};
+
+struct Frame {
+    int x_min, x_max, y_min, y_max;
+    bool initialized = false;
+};
+
+Frame get_local_frame(const Polygon& p) {
+    auto mm = std::minmax_element(
+        p.points.begin(),
+        p.points.end(),
+        PointCompare()
+    );
+
+    return { (*mm.first).x, (*mm.second).x,
+             (*mm.first).y, (*mm.second).y, true };
+}
+
+struct MergeFrames {
+    Frame operator()(Frame a, Frame b) const {
+        if (!a.initialized) return b;
+        if (!b.initialized) return a;
+
+        return {
+            std::min(a.x_min, b.x_min),
+            std::max(a.x_max, b.x_max),
+            std::min(a.y_min, b.y_min),
+            std::max(a.y_max, b.y_max),
+            true
+        };
+    }
+};
+
+struct FindFrame {
+    Frame operator()(Frame acc, const Polygon &p) const {
+        return MergeFrames()(acc, get_local_frame(p));
+    }
+};
+
+struct IsInsideFrame {
+    Frame f;
+
+    bool operator()(const Point& p) const {
+        return p.x >= f.x_min && p.x <= f.x_max &&
+               p.y >= f.y_min && p.y <= f.y_max;
     }
 };
 
@@ -243,15 +297,15 @@ int main(int argc, char* argv[]) {
         std::string main_cmd;
         iss >> main_cmd;
 
-        std::string sub_cmd;
-        iss >> sub_cmd;
-
-        if (iss >> std::ws && !iss.eof()) {
-            std::cout << "<INVALID COMMAND>\n";
-            continue;
-        }
-
         if (main_cmd == "AREA") {
+            std::string sub_cmd;
+            iss >> sub_cmd;
+
+            if (iss >> std::ws && !iss.eof()) {
+                std::cout << "<INVALID COMMAND>\n";
+                continue;
+            }
+
             if (sub_cmd == "EVEN") {
                 double area = std::accumulate(
                     polygons.begin(),
@@ -311,6 +365,14 @@ int main(int argc, char* argv[]) {
                 }
             }
         } else if (main_cmd == "MAX") {
+            std::string sub_cmd;
+            iss >> sub_cmd;
+
+            if (iss >> std::ws && !iss.eof()) {
+                std::cout << "<INVALID COMMAND>\n";
+                continue;
+            }
+
             if (polygons.empty()) {
                 std::cerr << "<INVALID COMMAND>\n";
                 continue;
@@ -338,6 +400,14 @@ int main(int argc, char* argv[]) {
                 continue;
             }
         } else if (main_cmd == "MIN") {
+            std::string sub_cmd;
+            iss >> sub_cmd;
+
+            if (iss >> std::ws && !iss.eof()) {
+                std::cout << "<INVALID COMMAND>\n";
+                continue;
+            }
+
             if (polygons.empty()) {
                 std::cerr << "<INVALID COMMAND>\n";
                 continue;
@@ -364,6 +434,14 @@ int main(int argc, char* argv[]) {
                 continue;
             }
         } else if (main_cmd == "COUNT") {
+            std::string sub_cmd;
+            iss >> sub_cmd;
+
+            if (iss >> std::ws && !iss.eof()) {
+                std::cout << "<INVALID COMMAND>\n";
+                continue;
+            }
+
             if (sub_cmd == "EVEN") {
                 std::size_t cnt = std::count_if(
                     polygons.begin(),
@@ -406,6 +484,37 @@ int main(int argc, char* argv[]) {
                     continue;
                 }
             }
+        } else if (main_cmd == "INFRAME") {
+            if (polygons.empty()) {
+                std::cerr << "<INVALID COMMAND>\n";
+                continue;
+            }
+
+            Polygon poly;
+            iss >> poly;
+
+            if (!iss || (iss >> std::ws && !iss.eof())) {
+                std::cout << "<INVALID COMMAND>\n";
+                continue;
+            }
+
+            Frame res = std::accumulate(
+                polygons.begin(),
+                polygons.end(),
+                Frame(),
+                FindFrame()
+            );
+
+            bool ok = std::all_of(
+                poly.points.begin(),
+                poly.points.end(),
+                IsInsideFrame{res}
+            );
+
+            std::cout << (ok ? "<TRUE>\n" : "<FALSE>\n");
+        } else if (main_cmd == "MAXSEQ") {
+            // add operator== for Polygons
+            // use std::adjacent_find in loop (or std::search)
         } else {
             std::cerr << "<INVALID COMMAND>\n";
             continue;
