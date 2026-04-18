@@ -14,6 +14,8 @@
 
 using namespace std::placeholders;
 
+// #define DEBUG
+
 struct Point {
     int x, y;
 };
@@ -206,28 +208,39 @@ struct IsNumOfVertexes {
     }
 };
 
-struct PointCompare {
-    bool operator()(const Point &a, const Point &b) const {
-        if (a.x != b.y)
-            return a.x < b.x;
-        return a.y < b.y;
-    }
-};
-
 struct Frame {
     int x_min, x_max, y_min, y_max;
     bool initialized = false;
 };
 
+struct PointsCompareX {
+    bool operator()(const Point &a, const Point &b) const {
+        return a.x < b.x;
+    }
+};
+
+struct PointsCompareY {
+    bool operator()(const Point &a, const Point &b) const {
+        return a.y < b.y;
+    }
+};
+
 Frame get_local_frame(const Polygon& p) {
-    auto mm = std::minmax_element(
-        p.points.begin(),
-        p.points.end(),
-        PointCompare()
+    const auto& points = p.points;
+
+    auto x = std::minmax_element(
+        points.begin(),
+        points.end(),
+        PointsCompareX()
     );
 
-    return { (*mm.first).x, (*mm.second).x,
-             (*mm.first).y, (*mm.second).y, true };
+    auto y = std::minmax_element(
+        points.begin(),
+        points.end(),
+        PointsCompareX()
+    );
+
+    return { x.first->x, x.second->x, y.first->y, y.second->y, true };
 }
 
 struct MergeFrames {
@@ -321,14 +334,18 @@ int main(int argc, char* argv[]) {
 
         std::istringstream iss(raw);
 
-        std::copy(
-            std::istream_iterator<Polygon>(iss),
-            std::istream_iterator<Polygon>(),
-            std::back_inserter(polygons)
-        );
+        Polygon poly;
+        if (iss >> poly) {
+            iss >> std::ws;
+            if (iss.eof()) {
+                polygons.push_back(std::move(poly));
+            }
+        }
     }
 
-    // out_polygons(polygons);
+    #ifdef DEBUG
+    out_polygons(polygons);
+    #endif
 
     std::cout << std::fixed << std::setprecision(1);
 
@@ -511,7 +528,7 @@ int main(int argc, char* argv[]) {
                         throw std::invalid_argument("ERROR: not pure number");
                     }
 
-                    if (num_of_vertexes <= 0) {
+                    if (num_of_vertexes < 3) {
                         throw std::invalid_argument("ERROR: incorrect number of vertexes");
                     }
 
