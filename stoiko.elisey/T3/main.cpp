@@ -299,8 +299,8 @@ struct MaxSeqAccumulator {
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
-        std::cerr << "ERROR: No file name provided or incorrect file name\n";
-        std::cerr << "Usage: ./main <filename>\n";
+        std::cout << "ERROR: No file name provided or incorrect file name\n";
+        std::cout << "Usage: ./main <filename>\n";
         return 1;
     }
 
@@ -308,8 +308,8 @@ int main(int argc, char* argv[]) {
 
     std::ifstream file(filename);
     if (!file) {
-        std::cerr << "ERROR: file cannot be open or where is no file with such name\n";
-        std::cerr << "Usage: ./main <filename>\n";
+        std::cout << "ERROR: file cannot be open or where is no file with such name\n";
+        std::cout << "Usage: ./main <filename>\n";
         return 1;
     }
 
@@ -404,7 +404,7 @@ int main(int argc, char* argv[]) {
 
                     std::cout << area << "\n";
                 } catch (...) {
-                    std::cerr << "<INVALID COMMAND>\n";
+                    std::cout << "<INVALID COMMAND>\n";
                     continue;
                 }
             }
@@ -418,7 +418,7 @@ int main(int argc, char* argv[]) {
             }
 
             if (polygons.empty()) {
-                std::cerr << "<INVALID COMMAND>\n";
+                std::cout << "<INVALID COMMAND>\n";
                 continue;
             }
 
@@ -440,7 +440,7 @@ int main(int argc, char* argv[]) {
 
                 std::cout << (*max_element_it).points.size() << "\n";
             } else {
-                std::cerr << "<INVALID COMMAND>\n";
+                std::cout << "<INVALID COMMAND>\n";
                 continue;
             }
         } else if (main_cmd == "MIN") {
@@ -453,7 +453,7 @@ int main(int argc, char* argv[]) {
             }
 
             if (polygons.empty()) {
-                std::cerr << "<INVALID COMMAND>\n";
+                std::cout << "<INVALID COMMAND>\n";
                 continue;
             }
 
@@ -474,7 +474,7 @@ int main(int argc, char* argv[]) {
 
                 std::cout << (*min_element_it).points.size() << "\n";
             } else {
-                std::cerr << "<INVALID COMMAND>\n";
+                std::cout << "<INVALID COMMAND>\n";
                 continue;
             }
         } else if (main_cmd == "COUNT") {
@@ -523,13 +523,13 @@ int main(int argc, char* argv[]) {
 
                     std::cout << cnt << "\n";
                 } catch (...) {
-                    std::cerr << "<INVALID COMMAND>\n";
+                    std::cout << "<INVALID COMMAND>\n";
                     continue;
                 }
             }
         } else if (main_cmd == "INFRAME") {
             if (polygons.empty()) {
-                std::cerr << "<INVALID COMMAND>\n";
+                std::cout << "<INVALID COMMAND>\n";
                 continue;
             }
 
@@ -578,7 +578,7 @@ int main(int argc, char* argv[]) {
 
             std::cout << res.best << "\n";
         } else {
-            std::cerr << "<INVALID COMMAND>\n";
+            std::cout << "<INVALID COMMAND>\n";
             continue;
         }
     }
