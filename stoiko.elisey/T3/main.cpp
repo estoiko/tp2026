@@ -430,7 +430,7 @@ int main(int argc, char* argv[]) {
                     NumOfVertexesCompare()
                 );
 
-                std::cout << (*max_element_it).points.size() << "\n";
+                std::cout << max_element_it->points.size() << "\n";
             } else {
                 std::cout << "<INVALID COMMAND>\n";
                 continue;
@@ -464,7 +464,7 @@ int main(int argc, char* argv[]) {
                     NumOfVertexesCompare()
                 );
 
-                std::cout << (*min_element_it).points.size() << "\n";
+                std::cout << min_element_it->points.size() << "\n";
             } else {
                 std::cout << "<INVALID COMMAND>\n";
                 continue;
