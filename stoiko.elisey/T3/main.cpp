@@ -237,7 +237,7 @@ Frame get_local_frame(const Polygon& p) {
     auto y = std::minmax_element(
         points.begin(),
         points.end(),
-        PointsCompareX()
+        PointsCompareY()
     );
 
     return { x.first->x, x.second->x, y.first->y, y.second->y, true };
@@ -408,7 +408,7 @@ int main(int argc, char* argv[]) {
                         throw std::invalid_argument("ERROR: not pure number");
                     }
 
-                    if (num_of_vertexes <= 0) {
+                    if (num_of_vertexes < 3) {
                         throw std::invalid_argument("ERROR: incorrect number of vertexes");
                     }
 
