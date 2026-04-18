@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <iomanip>
 #include <iostream>
 #include <fstream>
 #include <istream>
@@ -148,6 +149,12 @@ struct SumArea {
 struct IsEven {
     bool operator()(const Polygon& p) const {
         return p.points.size() % 2 == 0;
+    }
+};
+
+struct IsOdd {
+    bool operator()(const Polygon& p) const {
+        return p.points.size() % 2 != 0;
     }
 };
 
@@ -488,11 +495,10 @@ int main(int argc, char* argv[]) {
 
                 std::cout << cnt << "\n";
             } else if (sub_cmd == "ODD") {
-                auto isOdd = std::not_fn(IsEven());
                 std::size_t cnt = std::count_if(
                     polygons.begin(),
                     polygons.end(),
-                    isOdd
+                    isOdd()
                 );
 
                 std::cout << cnt << "\n";
