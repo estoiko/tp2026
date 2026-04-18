@@ -498,7 +498,7 @@ int main(int argc, char* argv[]) {
                 std::size_t cnt = std::count_if(
                     polygons.begin(),
                     polygons.end(),
-                    isOdd()
+                    IsOdd()
                 );
 
                 std::cout << cnt << "\n";
